@@ -11,14 +11,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|min:6'
+            'username' => 'required|username',
+            'password' => 'required'
         ]);
 
-        $email = $request->input('email');
+        $username = $request->input('username');
         $password = $request->input('password');
 
-        $user = User::where('email', $email)->first();
+        $user = User::where('username', $username)->first();
         if (!$user) {
             return response()->json(['message' => 'Login failed'], 401);
         }
@@ -36,7 +36,8 @@ class AuthController extends Controller
         return response()->json($user);
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $user = \Auth::user();
         $user->token = null;
         $user->save();
